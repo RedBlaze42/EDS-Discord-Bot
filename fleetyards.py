@@ -33,7 +33,8 @@ class FleetYardsAPI():
                 try:
                     return request.json()
                 except json.decoder.JSONDecodeError:
-                    raise Exception("Returned to docs {}".format(url))
+                    print("No json {}\n{}".format(url,request.text))
+                    retry-=1
         raise Exception("Error url {} with text: {}".format(url,request.text))
 
     @property
