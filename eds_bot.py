@@ -22,7 +22,7 @@ async def check_hangars():
             if member not in hangars_backup.keys(): continue
             diff=bot.api.compare_hangars(hangars_backup[member], hangar)
             if diff!=([],[]):
-                embed=embeds.hangar_diffs(member,diff,bot.api.fleet_value(),bot.api.fleet_auec_value(),len(bot.api.get_corp_hangar()))
+                embed=bot.embeds.hangar_diffs(member,diff)
                 await channel.send(embed=embed)
         print("End of hangar check")
         hangars_backup=new_hangars
@@ -30,6 +30,7 @@ async def check_hangars():
 
 bot.config=open_config()
 bot.api=fleetyards.FleetYardsAPI(bot.config["fleetyards_login"],bot.config["fleetyards_password"],bot.config["fleet_id"])
+bot.embeds=embeds.EDS_Embeds(bot)
 
 
 @bot.event

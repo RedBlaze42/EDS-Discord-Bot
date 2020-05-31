@@ -1,6 +1,13 @@
 import discord
+from datetime import datetime
 
-def hangar_diffs(username,diffs,fleet_value,fleet_auec_value,fleet_number):#TODO Put that in a class with bot object and add fleet logo in the embed
+class EDS_Embeds():
+
+    def __init__(self,bot):
+        self.bot = bot
+        self.api = bot.api
+
+    def hangar_diffs(self,username,diffs):
     embed=discord.Embed(title=username, url="https://fleetyards.net/hangar/{}".format(username), color=0x00fffb)
     embed.set_author(name="Changement de hangar !")
 
@@ -15,7 +22,7 @@ def hangar_diffs(username,diffs,fleet_value,fleet_auec_value,fleet_number):#TODO
         for ship in diffs[1]:
             ships+="- __**{}** {}__\n".format(ship.brand_name,ship.model_name)
         embed.add_field(name="**__Suppressions__**", value=ships, inline=False)
-    embed.add_field(name="Nouvelle valeur de la flotte de {} vaisseaux:".format(fleet_number), value="{}$\n{} aUEC (provisoire)".format(fleet_value,fleet_auec_value), inline=False)
+        embed.add_field(name="Nouvelle valeur de la flotte de {} vaisseaux:".format(len(self.api.get_corp_hangar())), value="{}$\n{} aUEC (provisoire)".format(self.api.fleet_value(),self.api.fleet_auec_value()), inline=False)
     embed.set_footer(text="EDS Bot par RedBlaze")
     embed.timestamp=diffs[0][0].updated_at if len(diffs[0])>0 else diffs[1][0].updated_at
     return embed
