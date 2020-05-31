@@ -23,7 +23,7 @@ class FleetYardsAPI():
 
     def _get(self,url):
         url=urllib.parse.urljoin(self.base_url,url)
-        retry=4
+        retry=10
         while retry>0:
             request=requests.get(url, headers={'Authorization': "Bearer {}".format(self.token)})
             if request.status_code !=200:
