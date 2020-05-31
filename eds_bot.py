@@ -24,8 +24,28 @@ async def check_hangars():
             if diff!=([],[]):
                 embed=bot.embeds.hangar_diffs(member,diff)
                 await channel.send(embed=embed)
-        print("End of hangar check")
+        #print("End of hangar check")
         hangars_backup=new_hangars
+        await asyncio.sleep(bot.config["refresh_interval"])
+
+async def check_members():
+    previous_members=bot.api.members
+    channel=bot.get_channel(bot.config["fleet_channel"])#TODO Separate channels ?
+    if channel is None: raise Exception("No channel found")
+
+    while True:
+        new_members=bot.api.members
+        diffs=bot.api.compare_members(previous_members, new_members)
+        if diffs!=([],[]):
+            for new_member in diffs[0]:
+                embed=bot.embeds.new_member(new_member)
+                await channel.send(embed=embed)
+
+            for kicked_member in diffs[1]:
+                embed=bot.embeds.member_leeaving(kicked_member)
+                await channel.send(embed=embed)
+        #print("End of members check")
+        previous_members=new_members
         await asyncio.sleep(bot.config["refresh_interval"])
 
 bot.config=open_config()
@@ -37,5 +57,6 @@ bot.embeds=embeds.EDS_Embeds(bot)
 async def on_ready():
     print("Bot ready !")
     bot.loop.create_task(check_hangars())
+    bot.loop.create_task(check_members())
 
 bot.run(bot.config["token"])
