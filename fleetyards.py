@@ -25,7 +25,7 @@ class FleetYardsAPI():
         url=urllib.parse.urljoin(self.base_url,url)
         retry=10
         while retry>0:
-            request=requests.get(url, headers={'Authorization': "Bearer {}".format(self.token)})
+            request=requests.get(url, headers={'Authorization': "Bearer {}".format(self.token),"Content-Type":"application/json"})
             if request.status_code !=200:
                 retry-=1
                 time.sleep(3)
