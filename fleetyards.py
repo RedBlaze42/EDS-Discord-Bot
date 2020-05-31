@@ -27,7 +27,7 @@ class FleetYardsAPI():
         try:
             return request.json()
         except json.decoder.JSONDecodeError:
-            raise Exception("Returned to docs")
+            raise Exception("Returned to docs {}".format(url))
 
     @property
     def members(self):
@@ -66,12 +66,12 @@ class FleetYardsAPI():
 
         #Check for removals
         for member in members1:
-            if not member in members2:
+            if not member["username"] in [temp["username"] for temp in members2]:
                 removals.append(member)
 
         #Check for additions
         for member in members2:
-            if not member in members1:
+            if not member["username"] in [temp["username"] for temp in members1]:
                 additions.append(member)
 
         return additions,removals
