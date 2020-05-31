@@ -26,7 +26,7 @@ async def check_hangars():
                 await channel.send(embed=embed)
         print("End of hangar check")
         hangars_backup=new_hangars
-        await asyncio.sleep(10)
+        await asyncio.sleep(bot.config["refresh_interval"])
 
 bot.config=open_config()
 bot.api=fleetyards.FleetYardsAPI(bot.config["fleetyards_login"],bot.config["fleetyards_password"],bot.config["fleet_id"])
