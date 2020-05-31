@@ -2,6 +2,8 @@ import requests
 import urllib
 import json
 import dateutil.parser
+import time
+
 
 class FleetYardsAPI():
 
@@ -21,13 +23,18 @@ class FleetYardsAPI():
 
     def _get(self,url):
         url=urllib.parse.urljoin(self.base_url,url)
-        request=requests.get(url, headers={'Authorization': "Bearer {}".format(self.token)})
-        if request.status_code != 200:
-            raise Exception("Error url {} with text: {}".format(url,request.text))
-        try:
-            return request.json()
-        except json.decoder.JSONDecodeError:
-            raise Exception("Returned to docs")
+        retry=4
+        while retry>0:
+            request=requests.get(url, headers={'Authorization': "Bearer {}".format(self.token)})
+            if request.status_code !=200:
+                retry-=1
+                time.sleep(1)
+            else:
+                try:
+                    return request.json()
+                except json.decoder.JSONDecodeError:
+                    raise Exception("Returned to docs {}".format(url))
+        raise Exception("Error url {} with text: {}".format(url,request.text))
 
     @property
     def members(self):
@@ -66,12 +73,12 @@ class FleetYardsAPI():
 
         #Check for removals
         for member in members1:
-            if not member in members2:
+            if not member["username"] in [temp["username"] for temp in members2]:
                 removals.append(member)
 
         #Check for additions
         for member in members2:
-            if not member in members1:
+            if not member["username"] in [temp["username"] for temp in members1]:
                 additions.append(member)
 
         return additions,removals

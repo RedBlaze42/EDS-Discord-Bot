@@ -4,5 +4,6 @@
     "fleet_channel": FLEET_DISCORD_CHANNEL_ID,
     "fleetyards_login":"LOGIN",
     "fleetyards_password":"PASSWORD",
-    "refresh_interval": 600
+    "refresh_interval": 600,
+    "expires": 7
 }
