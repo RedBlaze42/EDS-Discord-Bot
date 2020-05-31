@@ -80,6 +80,19 @@ class FleetYardsAPI():
         corp_hangar = list()
         for member in self.member_names:
             corp_hangar+=self.get_hangar(member)
+        return corp_hangar
+
+    def get_all_corp_hangars(self):
+        hangars=dict()
+        for member in self.member_names:
+            hangars[member]=self.get_hangar(member)
+        return hangars
+
+    def fleet_value(self):
+        return sum([ship.value for ship in self.get_corp_hangar()])
+    
+    def fleet_auec_value(self):
+        return sum([ship.auec_value for ship in self.get_corp_hangar()])
 
 class Vehicle():
 
@@ -91,6 +104,7 @@ class Vehicle():
         self.model_id=self.model_data["id"]
         self.model_name=self.model_data["name"]
         self.value=int(self.model_data["pledgePrice"]) if self.model_data["pledgePrice"] is not None else 0
+        self.auec_value=int(self.model_data["price"]) if self.model_data["price"] is not None else 0
         self.brand=self.model_data["manufacturer"]
         self.brand_name=self.brand["name"]
         self.cargo=int(self.model_data["cargo"])
@@ -98,4 +112,4 @@ class Vehicle():
         self.medium_image_url=self.model_data["storeImageMedium"]
         self.crew=self.model_data["maxCrew"]
         self.size=self.model_data["size"]
-        self.updated_at=dateutil.parser.parse(self.data["updatedAt"]).astimezone(dateutil.tz.tzlocal())
+        self.updated_at=dateutil.parser.parse(self.data["updatedAt"])

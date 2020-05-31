@@ -1,4 +1,7 @@
 {
     "token":"TOKEN",
-    "fleet_id":"FLEET_ID"
+    "fleet_id":"FLEET_ID",
+    "fleet_channel": FLEET_DISCORD_CHANNEL_ID,
+    "fleetyards_login":"login",
+    "fleetyards_password":"password"
 }
