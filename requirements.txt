@@ -1,0 +1,4 @@
+discord.py
+urllib3
+requests
+python-dateutil
