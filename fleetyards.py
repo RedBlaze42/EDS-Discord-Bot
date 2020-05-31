@@ -28,14 +28,14 @@ class FleetYardsAPI():
             request=requests.get(url, headers={'Authorization': "Bearer {}".format(self.token)})
             if request.status_code !=200:
                 retry-=1
-                time.sleep(5)
+                time.sleep(3)
             else:
                 try:
                     return request.json()
                 except json.decoder.JSONDecodeError:
                     print("No json {}\n{}".format(url,request.text))
                     retry-=1
-                    time.sleep(5)
+                    time.sleep(3)
             print("Retrying",url)
         raise Exception("Error url {} with text: {}".format(url,request.text))
 

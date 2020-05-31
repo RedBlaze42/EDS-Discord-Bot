@@ -64,7 +64,7 @@ async def delete_old_messages():
                 if message.author==bot.user:
                     await message.delete()
                     count+=1
-        print("Deleted",count,"messages")
+        print("Deleted",count,"messages with time limit on",time_limit)
         await asyncio.sleep(86400)
 
 
