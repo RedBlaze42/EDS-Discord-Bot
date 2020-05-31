@@ -1,5 +1,6 @@
 import discord,json,asyncio
 import fleetyards,embeds
+from datetime import datetime,timedelta
 
 bot=discord.Client()
 
@@ -52,11 +53,25 @@ bot.config=open_config()
 bot.api=fleetyards.FleetYardsAPI(bot.config["fleetyards_login"],bot.config["fleetyards_password"],bot.config["fleet_id"])
 bot.embeds=embeds.EDS_Embeds(bot)
 
+async def delete_old_messages():
+    while True:
+        if bot.config["expires"]<=0: return
+        channels=[bot.get_channel(bot.config["fleet_channel"])]
+        time_limit=datetime.utcnow()-timedelta(days=bot.config["expires"])
+        count=0
+        for channel in channels:
+            async for message in channel.history(before=time_limit):
+                if message.author==bot.user:
+                    await message.delete()
+                    count+=1
+        print("Deleted",count,"messages")
+        await asyncio.sleep(86400)
+
 
 @bot.event
 async def on_ready():
     print("Bot ready !")
     bot.loop.create_task(check_hangars())
     bot.loop.create_task(check_members())
-
+    bot.loop.create_task(delete_old_messages())
 bot.run(bot.config["token"])
